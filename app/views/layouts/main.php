@@ -1,11 +1,12 @@
 <?php
 
 use app\assets\AppAsset;
-use app\widgets\Alert;
+use yii\bootstrap5\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
 use yii\web\View;
 
 /** @var View $this */
@@ -41,9 +42,11 @@ $this->beginPage();
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav'],
             'items' => [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Contact', 'url' => ['/site/contact']],
+                ['label' => 'Home', 'url' => Url::to(['site/index'])],
+                ['label' => 'About', 'url' => Url::to(['site/about'])],
+                ['label' => 'Contact', 'url' => Url::to(['site/contact'])],
+                ['label' => 'Authors', 'url' => Url::to(['author/index'])],
+                ['label' => 'Books', 'url' => Url::to(['book/index'])],
                 \Yii::$app->user->isGuest
                     ? ['label' => 'Login', 'url' => ['/site/login']]
                     : '<li class="nav-item">'
@@ -62,10 +65,12 @@ $this->beginPage();
     </header>
     <main id="main" class="flex-shrink-0" role="main">
         <div class="container">
+            <?php foreach (Yii::$app->session->getAllFlashes() as $type => $message): ?>
+                <?= Alert::widget(['options' => ['class' => "alert-{$type}"], 'body' => $message]); ?>
+            <?php endforeach; ?>
             <?php if (!empty($this->params['breadcrumbs'])): ?>
                 <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
             <?php endif ?>
-            <?= Alert::widget() ?>
             <?= $content ?>
         </div>
     </main>
